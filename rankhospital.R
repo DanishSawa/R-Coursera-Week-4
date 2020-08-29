@@ -1,5 +1,6 @@
 rankhospital<- function(state, outcome, num="best")
 {
+        #Read the csv
         outcome_data<- read.csv("outcome-of-care-measures.csv",colClasses = "character")
         
         valid_outcome<-c("heart attack","heart failure","pneumonia")
@@ -37,28 +38,33 @@ rankhospital<- function(state, outcome, num="best")
 
 helper<- function(data,out_col,state,num)
 {
+        #Get the desired data according to inputs
         state_data<- data[data[,7]==state,]
         col_data<- state_data[,c(2,out_col)]
         col_data[,2]<- sapply(col_data[,2],as.numeric)
         comp_data<- na.omit(col_data)
         order_data<- comp_data[order(comp_data[,2],comp_data[,1]),]
         
+        #Based on num value, extract the result from filtered data
         if (num=="worst")
         {
                 num=nrow(order_data)
                 hosp_name<- order_data[num,1]
                 return (hosp_name)
         }
+        
         else if(num=="best")
         {
                 num=1
                 hosp_name<- order_data[num,1]
                 return (hosp_name)
         }
+        
         else if(num>nrow(order_data))
         {
                 return(NA)
         }
+        
         else
         {
                 hosp_name<- order_data[num,1]
